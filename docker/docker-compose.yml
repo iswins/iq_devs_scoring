@@ -1,0 +1,43 @@
+version: '3.8'
+services:
+
+    #PHP Service
+    iq_devs_scoring_fpm:
+        build:
+            context: ./php
+            dockerfile: ./Dockerfile
+        image: iq_devs_scoring_fpm
+        container_name: iq_devs_scoring_fpm
+        restart: unless-stopped
+        tty: true
+        env_file:
+            - ../.env
+        working_dir: /var/www
+        volumes:
+            - ../:/var/www
+        networks:
+            - iq_devs_scoring-network
+
+
+    #Supervisor Service
+    iq_devs_scoring_supervisor:
+        build:
+            context: ./php
+            dockerfile: ./Dockerfile
+        image: iq_devs_scoring_supervisor
+        container_name: iq_devs_scoring_supervisor
+        restart: unless-stopped
+        tty: true
+        command: bash -c "printenv | sed 's/^\(.*\)$$/export \1/g' > /root/project_env.sh && /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisor.conf"
+        env_file:
+            - ../.env
+        working_dir: /var/www
+        volumes:
+            - ../:/var/www
+        networks:
+            - iq_devs_scoring-network
+
+#Docker Networks
+networks:
+    iq_devs_scoring-network:
+        driver: bridge
