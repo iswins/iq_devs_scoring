@@ -9,6 +9,8 @@ services:
         image: iq_devs_scoring_fpm
         container_name: iq_devs_scoring_fpm
         restart: unless-stopped
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
         tty: true
         env_file:
             - ../.env
