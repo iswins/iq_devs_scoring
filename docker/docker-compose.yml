@@ -29,6 +29,8 @@ services:
         image: iq_devs_scoring_supervisor
         container_name: iq_devs_scoring_supervisor
         restart: unless-stopped
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
         tty: true
         command: bash -c "printenv | sed 's/^\(.*\)$$/export \1/g' > /root/project_env.sh && /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisor.conf"
         env_file:
